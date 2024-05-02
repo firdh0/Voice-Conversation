@@ -2,6 +2,7 @@
 import os
 
 import streamlit as st
+import streamlit.components.v1 as components
 # from google.colab import userdata
 from audio_recorder_streamlit import audio_recorder
 from dotenv import load_dotenv
@@ -23,7 +24,8 @@ st.title("🔊 Voice Conversation")
 
 with st.sidebar:
     st.title("🔐 OpenAI API Key")
-    key = st.text_input('Input your key', type='password')
+    key = st.text_input('Input your OpenAI key', type='password')
+    key2 = st.text_input('Input your Sapling key', type='password')
     st.header("Attention!")
     st.warning(
         """Before you use Voice Conversation, please enter the OpenAI key that you have.""", icon="🚨"
@@ -71,7 +73,32 @@ else:
             if transcript:
                 st.session_state.messages.append({"role": "user", "content": transcript})
                 with st.chat_message("user"):
-                    st.write(transcript)
+                    # st.write(transcript)
+                    components.html(
+                        """
+                            <style>
+                            #demo-editor {
+                                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                                color: white;
+                            }
+                            </style>
+                            <script src="https://sapling.ai/static/js/sapling-sdk-v1.0.6.min.js"></script>
+                            <div contenteditable="true" id="demo-editor">%s</div>
+
+                            <script type="text/javascript">
+                            const key = "%s";
+
+                            Sapling.init({
+                                key: key,
+                                mode: 'dev',
+                                autocomplete: true,
+                            });
+
+                            const contentEditable = document.getElementById('demo-editor');
+                            Sapling.observe(contentEditable);
+                            </script>
+                        """ % (transcript, key2),
+                    )
 
     if st.session_state.messages[-1]["role"] != "assistant":
 
