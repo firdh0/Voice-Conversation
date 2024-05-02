@@ -82,8 +82,8 @@ else:
                                 color: white;
                             }
                             </style>
-                            <script src="https://sapling.ai/static/js/sapling-sdk-v1.0.6.min.js"></script>
-                            <div contenteditable="true" id="demo-editor">%s</div>
+                            <script src="https://cdn.sapling.ai/sapling-sdk.js"></script>
+                            <div contenteditable="true" id="demo-editor" sapling-ignore="true">%s</div>
 
                             <script type="text/javascript">
                             const key = "%s";
@@ -92,6 +92,15 @@ else:
                                 key: key,
                                 mode: 'dev',
                                 autocomplete: true,
+                                statusBadge: true,
+                                appearance: {
+                                    compact: false,
+                                    variables: {
+                                        acceptText: 'Accept', // extended view only
+                                        ignoreText: 'Ignore',
+                                    },
+                                    customCSS: '',
+                                },
                             });
 
                             const contentEditable = document.getElementById('demo-editor');
