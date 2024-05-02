@@ -54,8 +54,8 @@ else:
     with footer_container:
         audio_bytes = audio_recorder(
             text="Click the following icon",
-            recording_color="#ff2567",
-            neutral_color="#5142e6",
+            recording_color="#ffcc00",
+            neutral_color="#aaa9cb",
             icon_size="2x",
         )
 
