@@ -30,10 +30,10 @@ with st.sidebar:
     st.warning(
         """Before you use Voice Conversation, please enter the OpenAI key that you have.""", icon="🚨"
     )
-    st.markdown("If you have entered your OpenAI key then there will be a microphone icon and please press this icon every time you have a conversation. The icon will stop listening once you have finished speaking")
+    st.markdown("If you have entered your OpenAI & Sapling key then there will be a microphone icon and please press this icon every time you have a conversation. The icon will stop listening once you have finished speaking")
 
 if not key.startswith('sk-'):
-    st.warning('Please input your OpenAI key before using!', icon='👈')
+    st.warning('Please input your OpenAI & Sapling key before using!', icon='👈')
 else:
     transcribe = transcribe.Transcribe(api_key=key)
     langchain = llmchain.Langchain(api_key=key)
