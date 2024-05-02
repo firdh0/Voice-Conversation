@@ -28,7 +28,7 @@ with st.sidebar:
     key2 = st.text_input('Input your Sapling key', type='password')
     st.header("Attention!")
     st.warning(
-        """Before you use Voice Conversation, please enter the OpenAI key that you have.""", icon="🚨"
+        """Before you use Voice Conversation, please enter the OpenAI & Sapling key that you have.""", icon="🚨"
     )
     st.markdown("If you have entered your OpenAI & Sapling key then there will be a microphone icon and please press this icon every time you have a conversation. The icon will stop listening once you have finished speaking")
 
