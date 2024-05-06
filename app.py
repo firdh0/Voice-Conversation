@@ -35,13 +35,20 @@ with st.sidebar:
 if not key.startswith('sk-'):
     st.warning('Please input your OpenAI & Sapling key before using!', icon='👈')
 else:
-    transcribe = transcribe.Transcribe(api_key=key)
-    langchain = llmchain.Langchain(api_key=key)
-    voice = voice.Voice(api_key=key)
+    # transcribe = transcribe.Transcribe(api_key=key)
+    # langchain = llmchain.Langchain(api_key=key)
+    # voice = voice.Voice(api_key=key)
 
     float_init()
 
     def initialize_session_state():
+        if "transcribe" not in st.session_state:
+            st.session_state.transcribe = transcribe.Transcribe(api_key=key)
+        if "langchain" not in st.session_state:
+            st.session_state.langchain = llmchain.Langchain(api_key=key)
+        if "voice" not in st.session_state:
+            st.session_state.voice = voice.Voice(api_key=key)
+
         if "messages" not in st.session_state:
             st.session_state.messages = [
                 {"role": "assistant", "content": "😍 Hello, how are things today? Anything interesting happen?"}
@@ -67,8 +74,8 @@ else:
         # Write the audio bytes to a file
         with st.spinner("Transcribing..."):
 
-            file_path = transcribe.save_file(audio_bytes)
-            transcript = transcribe.speech_to_text(file_path)
+            file_path = st.session_state.transcribe.save_file(audio_bytes)
+            transcript = st.session_state.transcribe.speech_to_text(file_path)
 
             if transcript:
                 st.session_state.messages.append({"role": "user", "content": transcript})
@@ -124,18 +131,18 @@ else:
                 if last_user_index is not None:
                     last_user_content = data[last_user_index]["content"]
 
-                response = langchain.chat(last_user_content)
+                response = st.session_state.langchain.chat(last_user_content)
 
             with st.spinner("Generating audio response..."):
-                audio_file = voice.text_to_speech(response)
+                audio_file = st.session_state.voice.text_to_speech(response)
                 # file_path = os.path.normpath(audio_file)
-                voice.autoplay_audio(audio_file)
+                st.session_state.voice.autoplay_audio(audio_file)
 
             st.write(response)
                 # st.write(file_path)
             st.session_state.messages.append({"role": "assistant", "content": response})
-            voice.delete_file()
-            transcribe.delete_file()
+            st.session_state.voice.delete_file()
+            st.session_state.transcribe.delete_file()
 
 
     # Float the footer container and provide CSS to target it with
