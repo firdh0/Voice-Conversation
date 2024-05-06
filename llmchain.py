@@ -12,7 +12,7 @@ from langchain import LLMChain
 from langchain.memory import ConversationBufferWindowMemory
 import streamlit as st
 
-@st.cache_resource
+# @st.cache_resource
 class Langchain:
     def __init__(self, api_key, model_name='gpt-4'):
         self.llm = ChatOpenAI(temperature=0, api_key=api_key, model_name=model_name)
