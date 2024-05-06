@@ -21,6 +21,7 @@ class Transcribe:
                 file=audio_file,
                 response_format="text",
                 language="id"
+                
             )
 
         return transcription
