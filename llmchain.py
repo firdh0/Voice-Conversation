@@ -1,16 +1,13 @@
 
 # from langchain_core.memory import BaseMemory
 # from langchain_core.prompts.prompt import PromptTemplate
-from langchain import LLMChain
-from langchain_core.prompts import PromptTemplate
+import streamlit as st
+from langchain import LLMChain  # LLM
 # from langchain_openai import ChatOpenAI
 from langchain.chat_models import ChatOpenAI
-
-
-from langchain import LLMChain  # LLM
-from langchain import LLMChain
 from langchain.memory import ConversationBufferWindowMemory
-import streamlit as st
+from langchain_core.prompts import PromptTemplate
+
 
 # @st.cache_resource
 class Langchain:
@@ -39,7 +36,7 @@ class Langchain:
         return LLMChain(
             llm=self.llm,
             prompt=self.prompt,
-            # verbose=True,
+            verbose=True,
             memory=self.memory
         )
 
