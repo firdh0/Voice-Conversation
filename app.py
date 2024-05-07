@@ -23,7 +23,7 @@ icon.show_icon("📬")
 st.title("🔊 Voice Conversation")
 
 with st.sidebar:
-    st.title("🔐 OpenAI API Key")
+    st.title("🔐 Key")
     key = st.text_input('Input your OpenAI key', type='password')
     key2 = st.text_input('Input your Sapling key', type='password')
     key3 = st.text_input('Input your ElevenLabs key', type='password')
