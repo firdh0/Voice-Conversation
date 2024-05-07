@@ -26,6 +26,7 @@ with st.sidebar:
     st.title("🔐 OpenAI API Key")
     key = st.text_input('Input your OpenAI key', type='password')
     key2 = st.text_input('Input your Sapling key', type='password')
+    key3 = st.text_input('Input your ElevenLabs key', type='password')
     st.header("Attention!")
     st.warning(
         """Before you use Voice Conversation, please enter the OpenAI & Sapling key that you have.""", icon="🚨"
@@ -47,7 +48,7 @@ else:
         if "langchain" not in st.session_state:
             st.session_state.langchain = llmchain.Langchain(api_key=key)
         if "voice" not in st.session_state:
-            st.session_state.voice = voice.Voice(api_key=key)
+            st.session_state.voice = voice.Voice(api_key=key3)
 
         if "messages" not in st.session_state:
             st.session_state.messages = [
