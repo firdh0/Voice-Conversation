@@ -4,6 +4,7 @@ import uuid
 
 from openai import OpenAI
 
+
 class Transcribe:
 
     def __init__(self, api_key):
@@ -20,8 +21,7 @@ class Transcribe:
                 model="whisper-1",
                 file=audio_file,
                 response_format="text",
-                language="id"
-                
+                language='en'
             )
 
         return transcription
