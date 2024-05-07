@@ -2,6 +2,7 @@
 import base64
 import os
 import uuid
+import requests
 
 import streamlit as st
 from openai import OpenAI
