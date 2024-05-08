@@ -78,7 +78,7 @@ else:
             transcript = st.session_state.transcribe.speech_to_text(file_path)
 
             if transcript != '':
-                print(transcript)
+                print(f"transcript: {transcript}")
                 st.session_state.messages.append({"role": "user", "content": transcript})
                 with st.chat_message("user"):
                     # st.write(transcript)
