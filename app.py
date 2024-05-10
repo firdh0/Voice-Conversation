@@ -60,7 +60,7 @@ with st.sidebar:
     st.title("🔐 API Key")
     # key = st.text_input('Masukkan kunci OpenAI kamu', type='password')
     key = st.secrets["openai_key"]
-    key3 = st.secrets["elevenlabs_key"]
+    # key3 = st.secrets["elevenlabs_key"]
     key2 = st.text_input('Masukkan kunci Sapling kamu', type='password')
 
 if key.startswith('sk-') and len(key2) == 32:
@@ -73,7 +73,7 @@ if key.startswith('sk-') and len(key2) == 32:
         if "langchain" not in st.session_state:
             st.session_state.langchain = llmchain.Langchain(api_key=key)
         if "voice" not in st.session_state:
-            st.session_state.voice = voice.Voice(api_key=key3)
+            st.session_state.voice = voice.Voice(api_key=key)
 
         if st.session_state.option == 'Bahasa Indonesia':
             if "messages" not in st.session_state:
