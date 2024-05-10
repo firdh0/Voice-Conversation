@@ -5,6 +5,8 @@ import uuid
 
 import streamlit as st
 from openai import OpenAI
+from elevenlabs import play, save
+from elevenlabs.client import ElevenLabs
 
 class Voice:
 
