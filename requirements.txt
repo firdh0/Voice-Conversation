@@ -43,7 +43,6 @@ langsmith==0.1.52
 markdown-it-py==3.0.0
 MarkupSafe==2.1.5
 marshmallow==3.21.2
-math
 matplotlib-inline==0.1.7
 multidict==6.0.5
 mypy-extensions==1.0.0
