@@ -1,11 +1,12 @@
 
+import math
 import os
 
 import streamlit as st
 import streamlit.components.v1 as components
 # from google.colab import userdata
 from audio_recorder_streamlit import audio_recorder
-from dotenv import load_dotenv
+from pydub import AudioSegment
 from streamlit_float import *
 
 import icon
@@ -13,31 +14,54 @@ import llmchain
 import transcribe
 import voice
 
-# load_dotenv()
-# key = os.getenv("openai_api_key")
-
 st.set_page_config(page_title="Voice Conversation",
                    page_icon=":bridge_at_night:",
                    layout="wide")
 icon.show_icon("📬")
 st.title("🔊 Voice Conversation")
 
-with st.sidebar:
-    st.title("🔐 OpenAI API Key")
-    key = st.text_input('Input your OpenAI key', type='password')
-    key2 = st.text_input('Input your Sapling key', type='password')
-    st.header("Attention!")
-    st.warning(
-        """Before you use Voice Conversation, please enter the OpenAI & Sapling key that you have.""", icon="🚨"
-    )
-    st.markdown("If you have entered your OpenAI & Sapling key then there will be a microphone icon and please press this icon every time you have a conversation. The icon will stop listening once you have finished speaking")
+if "option" not in st.session_state:
+    st.session_state.option = None
 
-if not key.startswith('sk-'):
-    st.warning('Please input your OpenAI & Sapling key before using!', icon='👈')
-else:
-    # transcribe = transcribe.Transcribe(api_key=key)
-    # langchain = llmchain.Langchain(api_key=key)
-    # voice = voice.Voice(api_key=key)
+def select():
+    if st.session_state.option is None:
+        st.session_state.option = st.selectbox(
+            "Pilih bahasa yang akan digunakan ya!",
+            ("Bahasa Inggris", "Bahasa Indonesia"),
+            index=None,
+            placeholder="Pilih bahasanya...",
+            disabled=False
+        )
+    else:
+        st.session_state.option = st.selectbox(
+            "Pilih bahasa yang akan digunakan ya!",
+            ("Bahasa Inggris", "Bahasa Indonesia"),
+            index=None,
+            placeholder="Pilih bahasanya...",
+            disabled=True
+        )
+
+    return st.session_state.option
+
+with st.sidebar:
+    
+    st.header("Perhatian!")
+    st.warning("Sebelum kita mulai Percakapan Suara, yuk pilih bahasanya dan masukkan kunci OpenAI & Sapling yang kamu punya. 😊🔑", icon="🚨")
+    st.markdown("Kalau kamu udah masukin kunci OpenAI & Sapling, nanti bakal ada ikon mikrofon. Tiap kali kamu mau ngobrol, tinggal tekan ikon itu ya. Ikonnya bakal berhenti denger otomatis begitu kamu selesai ngomong. 😊🎙️")
+    
+    st.title("🌐 Bahasa")
+    option = select()
+
+    if option is not None:
+        st.write("Kamu memilih:", option)
+
+    print(option)
+
+    st.title("🔐 API Key")
+    key = st.text_input('Masukkan kunci OpenAI kamu', type='password')
+    key2 = st.text_input('Masukkan kunci Sapling kamu', type='password')
+
+if key.startswith('sk-') and len(key2) == 32:
 
     float_init()
 
@@ -49,10 +73,16 @@ else:
         if "voice" not in st.session_state:
             st.session_state.voice = voice.Voice(api_key=key)
 
-        if "messages" not in st.session_state:
-            st.session_state.messages = [
-                {"role": "assistant", "content": "😍 Hello, how are things today? Anything interesting happen?"}
-            ]
+        if st.session_state.option == 'Bahasa Indonesia':
+            if "messages" not in st.session_state:
+                st.session_state.messages = [
+                    {"role": "assistant", "content": "😍 Halo! Bagaimana kabarmu hari ini? Ada yang perlu diobrolin?"}
+                ]
+        else:
+            if "messages" not in st.session_state:
+                st.session_state.messages = [
+                    {"role": "assistant", "content": "😍 Hello! How are you today? Is there anything you need to discuss?"}
+                ]
 
     initialize_session_state()
 
@@ -74,57 +104,76 @@ else:
         # Write the audio bytes to a file
         with st.spinner("Transcribing..."):
 
-            file_path = st.session_state.transcribe.save_file(audio_bytes)
-            transcript = st.session_state.transcribe.speech_to_text(file_path)
-
-            if transcript != '':
-                print(f"transcript: {transcript}")
-                st.session_state.messages.append({"role": "user", "content": transcript})
-                with st.chat_message("user"):
-                    # st.write(transcript)
-                    components.html(
-                        """
-                            <style>
-                            #demo-editor {
-                                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-                                color: white;
-                            }
-                            </style>
-                            <script src="https://cdn.sapling.ai/sapling-sdk.js"></script>
-                            <div contenteditable="true" id="demo-editor" sapling-ignore="true">%s</div>
-
-                            <script type="text/javascript">
-                            const key = "%s";
-
-                            Sapling.init({
-                                key: key,
-                                mode: 'dev',
-                                autocomplete: true,
-                                statusBadge: true,
-                                appearance: {
-                                    compact: false,
-                                    variables: {
-                                        acceptText: 'Accept', // extended view only
-                                        ignoreText: 'Ignore',
-                                    },
-                                    customCSS: '',
-                                },
-                            });
-
-                            const contentEditable = document.getElementById('demo-editor');
-                            Sapling.observe(contentEditable);
-                            </script>
-                        """ % (transcript, key2),
-                    )
+            if st.session_state.option == 'Bahasa Indonesia':
+                language='id'
             else:
-            # Handle empty transcript
-                st.error("Transcript is empty. Please try again with clearer audio.")
+                language='en'
+
+            print(f"language: {language}")
+        
+            file_path = st.session_state.transcribe.save_file(audio_bytes)
+            print(file_path)
+            transcript = st.session_state.transcribe.speech_to_text(file_path, language)
+
+            audio = AudioSegment.from_file(file_path)
+            average_volume = audio.dBFS
+            # print("Tipe data dari average_volume:", type(average_volume))
+            print(average_volume)
+
+            if math.isinf(average_volume):
+                if st.session_state.option == 'Bahasa Indonesia':
+                    st.warning('Sepertinya kamu belum berbicara ya?.   Ayo, kita mulai ngobrol! 😉')
+                else:
+                    st.warning("Looks like you haven't spoken yet, huh? Come on, let's start chatting! 😉")
+                
+            else:
+                if transcript:
+                    print(transcript)
+                    st.session_state.messages.append({"role": "user", "content": transcript})
+                    with st.chat_message("user"):
+                        # st.write(transcript)
+                        components.html(
+                            """
+                                <style>
+                                #demo-editor {
+                                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                                    color: white;
+                                }
+                                </style>
+                                <script src="https://cdn.sapling.ai/sapling-sdk.js"></script>
+                                <div contenteditable="true" id="demo-editor" sapling-ignore="true">%s</div>
+
+                                <script type="text/javascript">
+                                const key = "%s";
+
+                                Sapling.init({
+                                    key: key,
+                                    mode: 'dev',
+                                    autocomplete: true,
+                                    statusBadge: true,
+                                    appearance: {
+                                        compact: false,
+                                        variables: {
+                                            acceptText: 'Accept', // extended view only
+                                            ignoreText: 'Ignore',
+                                        },
+                                        customCSS: '',
+                                    },
+                                });
+
+                                const contentEditable = document.getElementById('demo-editor');
+                                Sapling.observe(contentEditable);
+                                </script>
+                            """ % (transcript, key2),
+                        )
+                else:
+                # Handle empty transcript
+                    st.warning('Sepertinya kamu belum berbicara ya?.   Ayo, kita mulai ngobrol! 😉')
 
     if st.session_state.messages[-1]["role"] != "assistant":
 
         with st.chat_message("assistant"):
-            # contoh_response = 'Hello'
-            # st.write(contoh_response)
+
             with st.spinner("Thinking🤔..."):
                 data = st.session_state.messages
                 last_user_index = None
@@ -139,15 +188,15 @@ else:
 
             with st.spinner("Generating audio response..."):
                 audio_file = st.session_state.voice.text_to_speech(response)
-                # file_path = os.path.normpath(audio_file)
                 st.session_state.voice.autoplay_audio(audio_file)
 
             st.write(response)
-                # st.write(file_path)
             st.session_state.messages.append({"role": "assistant", "content": response})
             st.session_state.voice.delete_file()
             st.session_state.transcribe.delete_file()
 
-
-    # Float the footer container and provide CSS to target it with
     footer_container.float("bottom: 0rem;")
+else:
+    st.warning('Masukkan dulu kunci OpenAI dan Sapling yang kamu punya ya! 😊🔑', icon='👈')
+
+    
