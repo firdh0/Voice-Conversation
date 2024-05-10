@@ -151,7 +151,6 @@ librosa==0.10.2
 llvmlite==0.42.0
 markdown-it-py==3.0.0
 MarkupSafe==2.1.5
-marshmallow==3.21.1
 matplotlib==3.8.4
 matplotlib-inline==0.1.7
 mdurl==0.1.2
