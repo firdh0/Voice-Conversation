@@ -46,8 +46,8 @@ def select():
 with st.sidebar:
     
     st.header("Perhatian!")
-    st.warning("Sebelum kita mulai Percakapan Suara, yuk pilih bahasanya dan masukkan kunci OpenAI & Sapling yang kamu punya. 😊🔑", icon="🚨")
-    st.markdown("Kalau kamu udah masukin kunci OpenAI & Sapling, nanti bakal ada ikon mikrofon. Tiap kali kamu mau ngobrol, tinggal tekan ikon itu ya. Ikonnya bakal berhenti denger otomatis begitu kamu selesai ngomong. 😊🎙️")
+    st.warning("Sebelum kita mulai Percakapan Suara, yuk pilih bahasanya dan masukkan kunci Sapling yang kamu punya. 😊🔑", icon="🚨")
+    st.markdown("Kalau kamu udah masukin kunci Sapling, nanti bakal ada ikon mikrofon. Tiap kali kamu mau ngobrol, tinggal tekan ikon itu ya. Ikonnya bakal berhenti denger otomatis begitu kamu selesai ngomong. 😊🎙️")
     
     st.title("🌐 Bahasa")
     option = select()
@@ -209,6 +209,6 @@ if key.startswith('sk-') and len(key2) == 32:
 
     footer_container.float("bottom: 0rem;")
 else:
-    st.warning('Masukkan dulu kunci OpenAI dan Sapling yang kamu punya ya! 😊🔑', icon='👈')
+    st.warning('Masukkan dulu kunci Sapling yang kamu punya ya! 😊🔑', icon='👈')
 
     
