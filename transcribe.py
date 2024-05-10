@@ -2,10 +2,7 @@
 import os
 import uuid
 
-import assemblyai as aai
 from dotenv import load_dotenv
-from langchain_community.document_loaders import \
-    AssemblyAIAudioTranscriptLoader
 from openai import OpenAI
 
 load_dotenv()
