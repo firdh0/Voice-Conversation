@@ -122,9 +122,13 @@ if key.startswith('sk-') and len(key2) == 32:
 
             if math.isinf(average_volume):
                 if st.session_state.option == 'Bahasa Indonesia':
-                    st.warning('Sepertinya kamu belum berbicara ya?.   Ayo, kita mulai ngobrol! 😉')
+                    with st.chat_message("assistant"):
+                        st.write('Sepertinya kamu belum berbicara ya?.   Ayo, kita mulai ngobrol! 😉')
                 else:
-                    st.warning("Looks like you haven't spoken yet, huh? Come on, let's start chatting! 😉")
+                    with st.chat_message("assistant"):
+                        st.write("Looks like you haven't spoken yet, huh? Come on, let's start chatting! 😉")
+                
+                # st.warning("Looks like you haven't spoken yet, huh? Come on, let's start chatting! 😉")
                 
             else:
                 if transcript:
@@ -168,7 +172,13 @@ if key.startswith('sk-') and len(key2) == 32:
                         )
                 else:
                 # Handle empty transcript
-                    st.warning('Sepertinya kamu belum berbicara ya?.   Ayo, kita mulai ngobrol! 😉')
+                    if st.session_state.option == 'Bahasa Indonesia':
+                        with st.chat_message("assistant"):
+                            st.write('Sepertinya kamu belum berbicara ya?.   Ayo, kita mulai ngobrol! 😉')
+                    else:
+                        with st.chat_message("assistant"):
+                            st.write("Looks like you haven't spoken yet, huh? Come on, let's start chatting! 😉")
+                
 
     if st.session_state.messages[-1]["role"] != "assistant":
 
