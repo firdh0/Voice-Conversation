@@ -2,29 +2,37 @@
 import os
 import uuid
 
+import assemblyai as aai
+from dotenv import load_dotenv
+from langchain_community.document_loaders import \
+    AssemblyAIAudioTranscriptLoader
 from openai import OpenAI
+
+load_dotenv()
+key = os.getenv("ASSEMBLYAI_API_KEY")
 
 
 class Transcribe:
 
     def __init__(self, api_key):
+        # self.api_key = api_key
         self.client = OpenAI(api_key=api_key)
         self.path = './chatbot/transcribe'
 
         if not os.path.exists(self.path):
             os.makedirs(self.path)
 
-    def speech_to_text(self, audio):
+    def speech_to_text(self, audio, language):
         with open(audio, 'rb') as audio_file:
 
             transcription = self.client.audio.transcriptions.create(
                 model="whisper-1",
                 file=audio_file,
                 response_format="text",
-                language='id'
+                language=language,
             )
 
-        return transcription
+            return transcription
 
     def save_file(self, audio_bytes):
         unique_filename = str(uuid.uuid4()) + ".mp3"
